@@ -28,6 +28,11 @@ HUDL_PASSWORD=yourPassword123
 npx playwright test
 ```
 
+### 5. Review the test results
+```
+npx playwright show-report
+```
+
 ## Future Improvements
 - Implement Page Object Model (POM) structure
 
