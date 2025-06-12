@@ -17,7 +17,7 @@ npm install
 ```
 
 ### 3. Set up your .env file
-Create a .env file in the root with your test credentials:
+Create a .env file in the project root directory with your test credentials:
 ```
 HUDL_EMAIL=your-email@example.com
 HUDL_PASSWORD=yourPassword123
@@ -31,7 +31,7 @@ npx playwright test
 ## Future Improvements
 - Implement Page Object Model (POM) structure
 
-- Expand test coverage to include alternate login methods and forgot password
+- Expand test coverage to include additional login methods and forgot password
 
 - Create a workflow using GitHub Actions to schedule test runs
 

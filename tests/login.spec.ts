@@ -28,9 +28,7 @@ test.describe('Hudl Login Tests', () => {
   });
 
   test('should show an error for invalid password', async ({ page }) => {
-    await completeFullLogin(page, HUDL_EMAIL, 'wrongPassword')
-
-    await page.pause();
+    await completeFullLogin(page, HUDL_EMAIL, 'wrongPassword');
 
     // Verify error message for invalid password
     const errorMsg = page.locator('#error-element-password');
@@ -39,22 +37,3 @@ test.describe('Hudl Login Tests', () => {
   });
 
 });
-
-
-
-/* test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
-
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-}); */
