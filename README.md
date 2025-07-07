@@ -1,6 +1,35 @@
 # Hudl Login Tests
 
-This project contains login tests for the [Hudl](https://www.hudl.com) web application, built with [Playwright](https://playwright.dev/) and written in TypeScript.
+This project contains automated UI tests for validating the login functionality of [Hudl](https://www.hudl.com), implemented using [Playwright](https://playwright.dev/) with TypeScript.
+
+The test suite is structured with best practices in mind, including the use of the **Page Object Model (POM)**, environment variables for credentials, and reusable helper functions.
+
+## Project Structure
+
+```
+hudl-tests/
+├── pages/
+│ └── LoginPage.ts # Page Object Model for login page actions and assertions
+├── tests/
+│ └── login.spec.ts # All login test scenarios
+├── types/
+│ └── BrowserName.ts # Custom type for supported browser names
+├── utils/
+│ └── oauthRedirect.ts # Shared helper for validating third-party redirects
+├── .env # Stores test credentials (not committed)
+├── playwright.config.ts # Playwright configuration
+├── package.json
+└── README.md
+```
+
+## Features Covered
+
+- Standard login with valid credentials
+- Error handling for invalid or malformed email addresses
+- Error handling for incorrect passwords
+- Social login redirects for Google, Facebook, and Apple
+- Footer link validation for Privacy Policy and Terms of Service
+- Cross-browser support for Chromium, Firefox, and WebKit
 
 ## Getting Started
 
@@ -34,10 +63,18 @@ npx playwright show-report
 ```
 
 ## Future Improvements
-- Implement Page Object Model (POM) structure
+- Add support for password recovery flow
 
-- Expand test coverage to include additional login methods and forgot password
+- Secure credentials using GitHub secrets (for CI)
 
-- Create a workflow using GitHub Actions to schedule test runs
+- Integrate with CI/CD pipelines for continuous testing
 
-- Use GitHub Secrets to store credentials
+## Notes for Reviewers
+- The Page Object Model is fully implemented for all login and footer interactions.
+
+- Third-party login tests use a helper to validate OAuth redirects and accommodate browser-specific behaviors.
+
+- Possible Defect: During testing, I encountered an issue where the third-party login (e.g., Google, Apple) required clicking the “Continue with [Provider]” button more than once to redirect to the OAuth provider. Within the helper, I added a workaround to retry the click if the user remains on the login page after the first attempt. This behavior appears inconsistent across browsers and may reflect an issue worth further investigation.
+
+- The suite is intentionally scoped to the login flow as outlined in the assignment, but it is built to scale.
+

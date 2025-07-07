@@ -1,39 +1,76 @@
-import { test, expect } from '@playwright/test';
-import {
-  navigatetoHudlLoginPage,
-  enterEmail,
-  completeFullLogin
-} from '../utils/login';
+import { test } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const HUDL_EMAIL = process.env.HUDL_EMAIL!;
 const HUDL_PASSWORD = process.env.HUDL_PASSWORD!;
 
+const INVALID_EMAIL = 'invalid@test.c';
+const INVALID_EMAIL_FORMAT = 'invalid#wrong.com';
+const EMAIL_WITH_SPACES = 'arielle.israel55 @gmail.com';
+
 test.describe('Hudl Login Tests', () => {
 
-  test('should login with valid credentials', async ({ page }) => {
-    await completeFullLogin(page, HUDL_EMAIL, HUDL_PASSWORD)
+  let loginPage: LoginPage;
 
-    // Verify successful login
-    await expect(page).toHaveURL('https://www.hudl.com/home');
+  test.beforeEach(async ({ page, browserName }) => {
+    loginPage = new LoginPage(page, browserName);
   });
 
-  test('should show an error for invalid email', async ({ page }) => {
-    await navigatetoHudlLoginPage(page);
-    await enterEmail(page, 'invalid@test.c');
-
-    // Verify error message for invalid email
-    const errorMsg = page.locator('#error-element-username');
-    await expect(errorMsg).toBeVisible({ timeout: 10000 });
-    await expect(errorMsg).toHaveText(/Enter a valid email./i);
+  test('should log in successfully with valid credentials', async () => {
+    await loginPage.login(HUDL_EMAIL, HUDL_PASSWORD);
+    await loginPage.assertLoginSuccess();
   });
 
-  test('should show an error for invalid password', async ({ page }) => {
-    await completeFullLogin(page, HUDL_EMAIL, 'wrongPassword');
-
-    // Verify error message for invalid password
-    const errorMsg = page.locator('#error-element-password');
-    await expect(errorMsg).toBeVisible({ timeout: 10000 });
-    await expect(errorMsg).toHaveText(/Your email or password is incorrect. Try again./i);
+  test('should show an error with invalid email', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.enterEmail(INVALID_EMAIL);
+    await loginPage.assertInvalidEmailError();
   });
 
+  test('should show an error with incorrect password', async () => {
+    await loginPage.login(HUDL_EMAIL, 'wrongPassword');
+    await loginPage.assertInvalidPasswordError();
+  });
+
+  test('should show an error with invalid email format', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.enterEmail(INVALID_EMAIL_FORMAT);
+    await loginPage.assertInvalidEmailError();
+  });
+
+  test('should show an error for an email with spaces', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.enterEmail(EMAIL_WITH_SPACES);
+    await loginPage.assertInvalidEmailError();
+  });
+
+  test('should continue to log in using Google', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.assertGoogleLogin();
+  });
+
+  test('should continue to log in using Facebook', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.assertFacebookLogin();
+  });
+
+  test('should continue to log in using Apple', async () => {
+    await loginPage.navigateToLogin();
+    await loginPage.assertAppleLogin();
+  });
+
+  test('should open the Privacy Policy in a new tab', async () => {
+    await loginPage.navigateToLogin();
+  
+    await loginPage.openAndVerifyPrivacyPolicy();
+  });
+
+  test('should open the Terms of Service in a new tab', async () => {
+    await loginPage.navigateToLogin();
+  
+    await loginPage.openAndVerifyTermsOfService();
+  });
 });
+
