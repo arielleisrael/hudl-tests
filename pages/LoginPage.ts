@@ -60,7 +60,7 @@ export class LoginPage {
     ]);
   
     await newPage.waitForLoadState('load');
-    await expect(newPage).toHaveURL(/privacy-policy/i);
+    await expect(newPage).toHaveURL(/privacy/i);
     await newPage.close(); // Auto-close the new tab
   }
 

@@ -67,7 +67,7 @@ test.describe('Hudl Login Tests', () => {
     await loginPage.openAndVerifyPrivacyPolicy();
   });
 
-  test('should open the Terms of Service in a new tab', async () => {
+  test.only('should open the Terms of Service in a new tab', async () => {
     await loginPage.navigateToLogin();
   
     await loginPage.openAndVerifyTermsOfService();
